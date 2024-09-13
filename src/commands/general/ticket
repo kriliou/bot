@@ -1,0 +1,125 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Ticket {
+    private static int idCounter = 1;
+    private int id;
+    private String title;
+    private String description;
+    private boolean resolved;
+
+    public Ticket(String title, String description) {
+        this.id = idCounter++;
+        this.title = title;
+        this.description = description;
+        this.resolved = false;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    public void markAsResolved() {
+        this.resolved = true;
+    }
+
+    @Override
+    public String toString() {
+        return "Ticket ID: " + id + "\nTitre: " + title + "\nDescription: " + description + "\nStatut: " + (resolved ? "Résolu" : "Ouvert");
+    }
+}
+
+public class TicketSystem {
+
+    private ArrayList<Ticket> tickets;
+    private Scanner scanner;
+
+    public TicketSystem() {
+        tickets = new ArrayList<>();
+        scanner = new Scanner(System.in);
+    }
+
+    public void start() {
+        while (true) {
+            System.out.println("\nSystème de Ticket:");
+            System.out.println("1. Créer un nouveau ticket");
+            System.out.println("2. Consulter tous les tickets");
+            System.out.println("3. Marquer un ticket comme résolu");
+            System.out.println("4. Quitter");
+            System.out.print("Choisissez une option: ");
+
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Clear newline
+
+            switch (choice) {
+                case 1:
+                    createTicket();
+                    break;
+                case 2:
+                    viewTickets();
+                    break;
+                case 3:
+                    resolveTicket();
+                    break;
+                case 4:
+                    System.out.println("Fermeture du système.");
+                    return;
+                default:
+                    System.out.println("Option invalide. Veuillez réessayer.");
+            }
+        }
+    }
+
+    private void createTicket() {
+        System.out.print("Entrez le titre du ticket: ");
+        String title = scanner.nextLine();
+
+        System.out.print("Entrez la description du ticket: ");
+        String description = scanner.nextLine();
+
+        Ticket ticket = new Ticket(title, description);
+        tickets.add(ticket);
+        System.out.println("Ticket créé avec succès! ID du ticket: " + ticket.getId());
+    }
+
+    private void viewTickets() {
+        if (tickets.isEmpty()) {
+            System.out.println("Aucun ticket disponible.");
+        } else {
+            for (Ticket ticket : tickets) {
+                System.out.println("\n" + ticket);
+            }
+        }
+    }
+
+    private void resolveTicket() {
+        System.out.print("Entrez l'ID du ticket à marquer comme résolu: ");
+        int id = scanner.nextInt();
+
+        for (Ticket ticket : tickets) {
+            if (ticket.getId() == id) {
+                ticket.markAsResolved();
+                System.out.println("Ticket ID " + id + " marqué comme résolu.");
+                return;
+            }
+        }
+        System.out.println("Ticket non trouvé.");
+    }
+
+    public static void main(String[] args) {
+        TicketSystem system = new TicketSystem();
+        system.start();
+    }
+}
